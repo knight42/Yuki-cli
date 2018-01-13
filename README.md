@@ -1,1 +1,1 @@
-# Yuki-cli
+# Yuki CLI
