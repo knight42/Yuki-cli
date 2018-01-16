@@ -1,9 +1,9 @@
-use ::clap::{App, Arg, ArgMatches, SubCommand};
-use ::context::Context;
-use ::commands::{RespMsg,Commander};
+use clap::{App, Arg, ArgMatches, SubCommand};
+use commands::Commander;
+use context::Context;
 use std::io;
 
-pub struct Sync_;
+pub(crate) struct Sync_;
 
 impl Commander for Sync_ {
     fn build() -> App<'static, 'static> {
@@ -26,19 +26,15 @@ impl Commander for Sync_ {
             api.set_query(Some("debug=1"));
         }
         let mut resp = ctx.client.post(api.as_str()).send()?;
-        if !resp.status().is_success() {
-            let r: RespMsg = resp.json()?;
-            return Err(format_err!("{}", r.message));
-        }
+        exit_on_error!(resp);
 
         if verbose {
             api.set_query(None);
             api.path_segments_mut().unwrap().push("logs");
             api.set_query(Some("follow=1"));
             let mut resp = ctx.client.get(api).send()?;
-            let stdout = io::stdout();
-            let mut handler = stdout.lock();
-            resp.copy_to(&mut handler).ok();
+            exit_on_error!(resp);
+            resp.copy_to(&mut io::stdout())?;
         }
         Ok(())
     }

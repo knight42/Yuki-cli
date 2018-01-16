@@ -3,7 +3,7 @@ use clap::{App, Arg, ArgMatches, Shell, SubCommand};
 use context::Context;
 use std::io::stdout;
 
-pub struct Completion;
+pub(crate) struct Completion;
 
 impl super::Commander for Completion {
     fn build() -> App<'static, 'static> {

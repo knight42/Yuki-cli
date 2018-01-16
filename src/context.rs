@@ -20,7 +20,7 @@ impl<'a> ContextBuilder<'a> {
     }
 
     pub fn build(mut self) -> ::Result<Context> {
-        Ok(Context{
+        Ok(Context {
             remote: Url::parse(self.remote)?.join("api/v1/")?,
             client: self.cli_builder.build()?,
         })
@@ -36,7 +36,7 @@ const DEFAULT_REMOTE: &str = "http://127.0.0.1:9999/";
 
 impl<'a> Context {
     pub fn builder() -> ContextBuilder<'a> {
-        ContextBuilder{
+        ContextBuilder {
             remote: DEFAULT_REMOTE,
             cli_builder: reqwest::ClientBuilder::new(),
         }
