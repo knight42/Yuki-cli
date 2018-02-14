@@ -25,12 +25,13 @@ impl Commander for Export {
 
     fn exec(ctx: &Context, args: &ArgMatches) -> ::Result<()> {
         let pretty = args.is_present("pretty");
-        let mut api = ctx.remote.join("config")?;
+        let api = ctx.remote.join("config")?;
         let names: Vec<_> = args.values_of("NAMES").unwrap_or_default().collect();
+        let mut req = ctx.get(api);
         if !names.is_empty() {
-            api.set_query(Some(&format!("names={}", names.join(","))))
+            req.query(&[("names", names.join(","))]);
         }
-        let mut resp = ctx.client.get(api).send()?;
+        let mut resp = req.send()?;
         exit_on_error!(resp);
 
         if pretty {

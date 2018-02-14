@@ -22,17 +22,16 @@ impl Commander for Sync_ {
         let verbose = args.is_present("verbose");
         let repo = args.value_of("REPO").unwrap();
         let mut api = ctx.remote.join(&format!("containers/{}", repo))?;
+        let mut req = ctx.post(api.as_str());
         if verbose {
-            api.set_query(Some("debug=1"));
+            req.query(&[("debug", "1")]);
         }
-        let mut resp = ctx.client.post(api.as_str()).send()?;
+        let mut resp = req.send()?;
         exit_on_error!(resp);
 
         if verbose {
-            api.set_query(None);
             api.path_segments_mut().unwrap().push("logs");
-            api.set_query(Some("follow=1"));
-            let mut resp = ctx.client.get(api).send()?;
+            let mut resp = ctx.get(api).query(&[("follow", "1")]).send()?;
             exit_on_error!(resp);
             resp.copy_to(&mut io::stdout())?;
         }

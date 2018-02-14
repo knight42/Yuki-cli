@@ -23,7 +23,7 @@ impl Commander for RepoRm {
 
         let result = names.iter().map(|name| -> ::Result<Response> {
             let remote = remote.join(name)?;
-            Ok(ctx.client.delete(remote).send()?)
+            Ok(ctx.delete(remote).send()?)
         });
 
         for (name, rr) in names.iter().zip(result) {

@@ -45,12 +45,16 @@ mod meta;
 mod sync;
 mod export;
 mod import;
+mod login;
+mod logout;
 mod completion;
 
 pub(crate) use self::completion::Completion;
 pub(crate) use self::ct::Ct;
 pub(crate) use self::export::Export;
 pub(crate) use self::import::Import;
+pub(crate) use self::login::Login;
+pub(crate) use self::logout::Logout;
 pub(crate) use self::meta::Meta;
 pub(crate) use self::repo::Repo;
 pub(crate) use self::sync::Sync_;

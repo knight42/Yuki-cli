@@ -37,7 +37,7 @@ impl Commander for CtLogs {
                 .query_pairs_mut()
                 .append_pair("tail", args.value_of("tail").unwrap());
         }
-        let mut r = ctx.client.get(remote).send()?;
+        let mut r = ctx.get(remote).send()?;
         exit_on_error!(r);
         r.copy_to(&mut io::stdout())?;
         Ok(())

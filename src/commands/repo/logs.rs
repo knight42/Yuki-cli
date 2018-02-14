@@ -45,7 +45,7 @@ impl Commander for RepoLogs {
                 .query_pairs_mut()
                 .append_pair("tail", args.value_of("tail").unwrap());
         }
-        let mut resp = ctx.client.get(remote).send()?;
+        let mut resp = ctx.get(remote).send()?;
         exit_on_error!(resp);
         resp.copy_to(&mut io::stdout())?;
         Ok(())

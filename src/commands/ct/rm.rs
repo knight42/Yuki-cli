@@ -15,7 +15,7 @@ impl Commander for CtRm {
         let mut remote = ctx.remote.join("containers")?;
         let name = args.value_of("NAME").unwrap();
         remote.path_segments_mut().unwrap().push(name);
-        let mut r = ctx.client.delete(remote).send()?;
+        let mut r = ctx.delete(remote).send()?;
         exit_on_error!(r);
         println!("Removed");
         Ok(())

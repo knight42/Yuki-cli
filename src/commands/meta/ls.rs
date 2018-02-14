@@ -46,7 +46,7 @@ impl Commander for MetaLs {
         let name = args.value_of("NAME");
 
         if name.is_none() {
-            let mut r = ctx.client.get(remote).send()?;
+            let mut r = ctx.get(remote).send()?;
             exit_on_error!(r);
             let repos: Vec<Meta> = r.json()?;
             serde_json::to_writer_pretty(io::stdout(), &repos)?;
@@ -55,7 +55,7 @@ impl Commander for MetaLs {
 
         let name = name.unwrap();
         remote.path_segments_mut().unwrap().push(name);
-        let mut r = ctx.client.get(remote).send()?;
+        let mut r = ctx.get(remote).send()?;
         exit_on_error!(r);
         let repo: Meta = r.json()?;
         serde_json::to_writer_pretty(io::stdout(), &repo)?;

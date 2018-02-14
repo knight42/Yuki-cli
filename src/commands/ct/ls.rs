@@ -25,7 +25,7 @@ impl Commander for CtLs {
 
     fn exec(ctx: &Context, _args: &ArgMatches) -> ::Result<()> {
         let remote = ctx.remote.join("containers")?;
-        let mut r = ctx.client.get(remote).send()?;
+        let mut r = ctx.get(remote).send()?;
         exit_on_error!(r);
         let cts: Vec<Container> = r.json()?;
         serde_json::to_writer_pretty(io::stdout(), &cts)?;

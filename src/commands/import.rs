@@ -18,7 +18,7 @@ impl Commander for Import {
         let fname = args.value_of("FILE").unwrap();
         let f = File::open(fname)?;
         let v: Value = serde_json::from_reader(f)?;
-        let mut resp = ctx.client.post(api).json(&v).send()?;
+        let mut resp = ctx.post(api).json(&v).send()?;
         exit_on_error!(resp);
         println!("Successfully imported");
         Ok(())

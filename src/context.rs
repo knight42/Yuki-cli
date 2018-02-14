@@ -1,21 +1,27 @@
-use reqwest::{self, Url};
+use reqwest::{Client, ClientBuilder, IntoUrl, RequestBuilder, Url};
 use reqwest::header::Headers;
+use std::path::{Path, PathBuf};
 
 pub struct ContextBuilder<'a> {
-    pub remote: &'a str,
-    pub cli_builder: reqwest::ClientBuilder,
+    remote: &'a str,
+    homedir: &'a Path,
+    headers: Headers,
+    cli_builder: ClientBuilder,
 }
 
 impl<'a> ContextBuilder<'a> {
-    #[allow(dead_code)]
     pub fn set_remote(&mut self, url: &'a str) -> &mut Self {
         self.remote = url;
         self
     }
 
-    #[allow(dead_code)]
-    pub fn set_default_headers(&mut self, headers: Headers) -> &mut Self {
-        self.cli_builder.default_headers(headers);
+    pub fn set_homedir(&mut self, homedir: &'a Path) -> &mut Self {
+        self.homedir = homedir;
+        self
+    }
+
+    pub fn set_headers(&mut self, headers: Headers) -> &mut Self {
+        self.headers = headers;
         self
     }
 
@@ -23,22 +29,50 @@ impl<'a> ContextBuilder<'a> {
         Ok(Context {
             remote: Url::parse(self.remote)?.join("api/v1/")?,
             client: self.cli_builder.build()?,
+            headers: self.headers,
+            homedir: self.homedir.to_path_buf(),
         })
+    }
+}
+
+impl<'a> Default for ContextBuilder<'a> {
+    fn default() -> Self {
+        ContextBuilder {
+            remote: DEFAULT_REMOTE,
+            homedir: Path::new("/"),
+            headers: Headers::default(),
+            cli_builder: ClientBuilder::new(),
+        }
     }
 }
 
 pub struct Context {
     pub remote: Url,
-    pub client: reqwest::Client,
+    pub homedir: PathBuf,
+    client: Client,
+    headers: Headers,
 }
 
-const DEFAULT_REMOTE: &str = "http://127.0.0.1:9999/";
+pub const DEFAULT_REMOTE: &str = "http://127.0.0.1:9999/";
+
+macro_rules! delegate_methods {
+    ($method:ident) => (
+    pub fn $method<U: IntoUrl>(&self, url: U) -> RequestBuilder {
+        let mut req = self.client.$method(url);
+        if self.headers.len() != 0 {
+            req.headers(self.headers.clone());
+        }
+        req
+    })
+}
 
 impl<'a> Context {
     pub fn builder() -> ContextBuilder<'a> {
-        ContextBuilder {
-            remote: DEFAULT_REMOTE,
-            cli_builder: reqwest::ClientBuilder::new(),
-        }
+        ContextBuilder::default()
     }
+
+    delegate_methods!(get);
+    delegate_methods!(post);
+    delegate_methods!(put);
+    delegate_methods!(delete);
 }
