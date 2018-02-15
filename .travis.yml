@@ -1,12 +1,37 @@
 language: rust
+services: docker
 rust:
   - stable
   - beta
   - nightly
+
+env:
+  global:
+    - BIN_NAME=yuki
+
+script:
+  - cargo run -- help
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+deploy:
+  api_key:
+    secure: hOXkTogKI5hSdRX1wozkd9vBkNWAx5ZPvknQNquqGEtFvJ6rDsiiiFtesMyxDf22zJgxnALgemhPsAdVncRuz6QhAkS1GzglJ2f0TXN6zc/KrMsOFbsrzsAorlb1yo2/hN0dGUQXqLNZBTK2TPlCT+8vI81MXgqc6YftslHfSFYMEZtQ8wregQ8fjGrNpcGE4LXksa3uHX2AU+kv2bK0hauG/ZpbC7gvJhSvyPcadKP3KxnemDiRPOcM1uFn2CKH7/wFffKRaH8cQcMOJOLX0Xbj5C5pTkHW1PIk1UVOfa3rEGaBxwfHIACFHUAKYn+PMMjdXSmrwctAbS3TYn0f8/iGS+0VGjgL7HpQNaBZ4i5kbedM2RvIpDUpaDVfoajaQISmz7YHmgy1Kjrhm5wfOgnpc9H7Zc47q32OQljJdrW7LPzWeulxiplZ6zH3LiFxg83FJ7H2qxEruAlb6DO89qMwTJTq/tIhVy8v1DZ8OR7emRptBEuGdhpW1konRao5AiOClQj5etmmgdbAZG8U0Y8HrBJzJLSfhj0nm/mcKvbywc7NK/UNFEPv9jnJzR/1eZ84pDKUMchz9TKUJ/ciH3B01+SIiRsZRxDWI6PyRK+KF8SbwI2vwZln4CuY/zR7HOfoG9UQbtcZIe+W2iTo1kYRT0/OvuHzWtWD+NrPtps=
+  file_glob: true
+  file: $BIN_NAME-$TRAVIS_TAG.*.*
+  on:
+    condition: $TRAVIS_RUST_VERSION = stable
+    tags: true
+    branch: master
+  provider: releases
+  skip_cleanup: true
+
 cache: cargo
-os:
-  - linux
-  - osx
-matrix:
-  allow_failures:
-    - rust: nightly
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+notifications:
+  email: false
+  webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
