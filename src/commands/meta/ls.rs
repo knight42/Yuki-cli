@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Local, TimeZone};
 use clap::{App, Arg, ArgMatches, SubCommand};
 use commands::{ts_local, Commander};
 use context::Context;
@@ -23,12 +23,22 @@ where
     Ok(format!("{} GiB", s))
 }
 
+fn default_date() -> DateTime<Local> {
+    return Local.timestamp(0, 0);
+}
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct Meta {
-    #[serde(with = "ts_local")] created_at: DateTime<Local>,
-    #[serde(with = "ts_local")] updated_at: DateTime<Local>,
-    #[serde(with = "ts_local")] last_success: DateTime<Local>,
+    #[serde(with = "ts_local")]
+    #[serde(default = "default_date")]
+    created_at: DateTime<Local>,
+    #[serde(with = "ts_local")]
+    #[serde(default = "default_date")]
+    updated_at: DateTime<Local>,
+    #[serde(with = "ts_local")]
+    #[serde(default = "default_date")]
+    last_success: DateTime<Local>,
     #[serde(deserialize_with = "pretty_size")] size: String,
     name: String,
     upstream: String,
