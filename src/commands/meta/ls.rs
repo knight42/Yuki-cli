@@ -1,27 +1,11 @@
 use chrono::{DateTime, Local, TimeZone};
 use clap::{App, Arg, ArgMatches, SubCommand};
-use commands::{ts_local, Commander};
+use commands::{pretty_size, ts_local, Commander};
 use context::Context;
-use serde::{Deserialize, Deserializer};
 use serde_json;
 use std::io;
 
 pub(crate) struct MetaLs;
-
-fn pretty_size<'de, D>(d: D) -> Result<String, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let mut s = i64::deserialize(d)?;
-    for unit in ["KiB", "MiB"].iter() {
-        if s < 1024 {
-            return Ok(format!("{} {}", s, unit));
-        } else {
-            s /= 1024;
-        }
-    }
-    Ok(format!("{} GiB", s))
-}
 
 fn default_date() -> DateTime<Local> {
     return Local.timestamp(0, 0);
@@ -39,7 +23,7 @@ struct Meta {
     #[serde(with = "ts_local")]
     #[serde(default = "default_date")]
     last_success: DateTime<Local>,
-    #[serde(deserialize_with = "pretty_size")] size: String,
+    #[serde(serialize_with = "pretty_size")] size: i64,
     name: String,
     upstream: String,
 }

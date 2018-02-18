@@ -1,3 +1,5 @@
+use serde::Serializer;
+
 macro_rules! exit_on_error {
     ($r:ident) => ({
         if !$r.status().is_success() {
@@ -5,6 +7,21 @@ macro_rules! exit_on_error {
             return Err($crate::failure::err_msg(rm.message));
         }
     })
+}
+
+pub(crate) fn pretty_size<S>(size: &i64, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let mut size = *size as f64;
+    for unit in ["B", "KiB", "MiB", "GiB"].iter() {
+        if size < 1024_f64 {
+            return serializer.serialize_str(&format!("{} {}", size, unit));
+        } else {
+            size /= 1024_f64;
+        }
+    }
+    serializer.serialize_str(&format!("{} TiB", size))
 }
 
 pub(crate) mod ts_local {
