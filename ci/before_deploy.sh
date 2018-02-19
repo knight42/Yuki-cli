@@ -7,15 +7,17 @@ TARGET_DIR="$CUR_DIR/target/$TARGET/release/"
 LOCAL_USER="$(id -u):$(id -g)"
 docker run \
     -v "$CUR_DIR":/home/rust/src \
+    -v "$HOME/.cargo/registry":/home/rust/.cargo/registry \
     --rm \
     ekidd/rust-musl-builder \
     /bin/bash -c \
     "set -e && mkdir -p target/ \
-        && sudo chown -R rust:rust target/ \
+        && sudo chown -R rust:rust target/ /home/rust/.cargo/registry/ \
+        && rustup update stable \
         && cargo build --target=$TARGET --release \
         && sudo chown -R $LOCAL_USER target/$TARGET/release/"
 
 cd "$TARGET_DIR" || exit 1
 
 mv yuki_cli yuki
-tar -czf "$CUR_DIR/$BIN_NAME-$TRAVIS_TAG.$TARGET.tar.gz" 'yuki'
+tar -czf "$CUR_DIR/$BIN_NAME-$TRAVIS_TAG.$TARGET.tar.gz" yuki
