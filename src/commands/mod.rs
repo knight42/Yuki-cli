@@ -16,12 +16,12 @@ where
     let mut size = *size as f64;
     for unit in ["B", "KiB", "MiB", "GiB"].iter() {
         if size < 1024_f64 {
-            return serializer.serialize_str(&format!("{} {}", size, unit));
+            return serializer.serialize_str(&format!("{:.1} {}", size, unit));
         } else {
             size /= 1024_f64;
         }
     }
-    serializer.serialize_str(&format!("{} TiB", size))
+    serializer.serialize_str(&format!("{:.1} TiB", size))
 }
 
 pub(crate) mod ts_local {
