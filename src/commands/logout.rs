@@ -14,6 +14,9 @@ impl super::Commander for Logout {
             .create(true)
             .open(ctx.homedir.join("token"))?;
         f.set_len(0)?;
+        let remote = ctx.remote.join("sessions")?;
+        let mut r = ctx.delete(remote).send()?;
+        exit_on_error!(r);
         println!("Logout successfully.");
         Ok(())
     }
