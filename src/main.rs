@@ -21,6 +21,7 @@ use commands::Commander;
 use reqwest::header::{self, Headers};
 use std::env;
 use std::fs;
+use std::os::unix::fs::PermissionsExt;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::io::Read;
@@ -78,6 +79,9 @@ fn main() {
         .write(true)
         .open(homedir.join("token"))
         .expect("Cannot read token file");
+
+    let mut perms = f.metadata().unwrap().permissions();
+    perms.set_mode(0o600);
 
     if let Some(token) = find_token(f) {
         let mut h = Headers::new();
