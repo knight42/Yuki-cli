@@ -53,6 +53,7 @@ impl Commander for MetaLs {
         exit_on_error!(r);
         let repo: Meta = r.json()?;
         serde_json::to_writer_pretty(io::stdout(), &repo)?;
+        println!();
         Ok(())
     }
 }

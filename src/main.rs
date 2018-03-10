@@ -22,9 +22,7 @@ use reqwest::header::{self, Headers};
 use std::env;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
-use std::io::BufRead;
-use std::io::BufReader;
-use std::io::Read;
+use std::io::{BufRead,BufReader,Read};
 
 macro_rules! exit {
     ($fmt:expr) => ({

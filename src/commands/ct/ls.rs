@@ -29,6 +29,7 @@ impl Commander for CtLs {
         exit_on_error!(r);
         let cts: Vec<Container> = r.json()?;
         serde_json::to_writer_pretty(io::stdout(), &cts)?;
+        println!();
         Ok(())
     }
 }

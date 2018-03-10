@@ -29,15 +29,15 @@ impl Commander for CtLogs {
         let mut remote = ctx.remote.join("containers")?;
         let name = args.value_of("NAME").unwrap();
         remote.path_segments_mut().unwrap().push(name).push("logs");
+        let mut req = ctx.get(remote);
         if args.is_present("follow") {
-            remote.query_pairs_mut().append_pair("follow", "1");
+            req.query(&[("follow", "1")]);
         }
         if args.is_present("tail") {
-            remote
-                .query_pairs_mut()
-                .append_pair("tail", args.value_of("tail").unwrap());
+            value_t_or_exit!(args, "tail", u32);
+            req.query(&[("tail", args.value_of("tail").unwrap())]);
         }
-        let mut r = ctx.get(remote).send()?;
+        let mut r = req.send()?;
         exit_on_error!(r);
         r.copy_to(&mut io::stdout())?;
         Ok(())

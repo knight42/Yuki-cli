@@ -55,19 +55,16 @@ impl Commander for RepoLogs {
             serde_json::to_writer_pretty(io::stdout(), &stats)?;
             return Ok(());
         }
+        let mut req = ctx.get(remote);
         if args.is_present("nth") {
             value_t_or_exit!(args, "nth", u8);
-            remote
-                .query_pairs_mut()
-                .append_pair("n", args.value_of("nth").unwrap());
+            req.query(&[("n", args.value_of("nth").unwrap())]);
         }
         if args.is_present("tail") {
             value_t_or_exit!(args, "tail", u8);
-            remote
-                .query_pairs_mut()
-                .append_pair("tail", args.value_of("tail").unwrap());
+            req.query(&[("tail", args.value_of("tail").unwrap())]);;
         }
-        let mut r = ctx.get(remote).send()?;
+        let mut r = req.send()?;
         exit_on_error!(r);
         r.copy_to(&mut io::stdout())?;
         Ok(())

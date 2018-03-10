@@ -40,7 +40,7 @@ impl Commander for Export {
         } else {
             resp.copy_to(&mut io::stdout())?;
         }
-
+        println!();
         Ok(())
     }
 }

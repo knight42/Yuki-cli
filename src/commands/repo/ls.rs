@@ -22,6 +22,7 @@ impl Commander for RepoLs {
             exit_on_error!(r);
             let repos: Value = r.json()?;
             serde_json::to_writer_pretty(io::stdout(), &repos)?;
+            println!();
             return Ok(());
         }
 
@@ -31,6 +32,7 @@ impl Commander for RepoLs {
         exit_on_error!(r);
         let repo: Value = r.json()?;
         serde_json::to_writer_pretty(io::stdout(), &repo)?;
+        println!();
         Ok(())
     }
 }
