@@ -15,6 +15,7 @@ pub(crate) type Result<T> = ::std::result::Result<T, failure::Error>;
 
 mod commands;
 mod context;
+mod token;
 
 use clap::{App, AppSettings, Arg};
 use commands::Commander;
@@ -22,7 +23,6 @@ use reqwest::header::{self, Headers};
 use std::env;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
-use std::io::{BufRead,BufReader,Read};
 
 macro_rules! exit {
     ($fmt:expr) => ({
@@ -33,23 +33,6 @@ macro_rules! exit {
         eprintln!($fmt, $($arg)*);
         ::std::process::exit(1);
     });
-}
-
-fn find_token<R: Read>(r: R) -> Option<String> {
-    let reader = BufReader::new(r);
-    reader
-        .lines()
-        .filter_map(|line| {
-            line.ok().and_then(|s| {
-                let l = s.trim();
-                if l.is_empty() {
-                    None
-                } else {
-                    Some(l.to_string())
-                }
-            })
-        })
-        .next()
 }
 
 fn main() {
@@ -81,7 +64,7 @@ fn main() {
     let mut perms = f.metadata().unwrap().permissions();
     perms.set_mode(0o600);
 
-    if let Some(token) = find_token(f) {
+    if let Ok(token) = token::find_by_host(f, &matches.value_of("remote").unwrap()) {
         let mut h = Headers::new();
         h.set(header::Authorization(header::Bearer { token }));
         builder.set_headers(h);
