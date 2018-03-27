@@ -20,6 +20,7 @@ struct Meta {
     #[serde(with = "ts_local")]
     #[serde(default = "default_date")]
     updated_at: DateTime<Local>,
+    exit_code: i64,
     #[serde(with = "ts_local")]
     #[serde(default = "default_date")]
     last_success: DateTime<Local>,
