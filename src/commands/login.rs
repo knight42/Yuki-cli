@@ -3,7 +3,7 @@ use clap::{App, ArgMatches, SubCommand};
 use context::Context;
 use rpassword::prompt_password_stdout;
 use std::fs;
-use std::io::{self, Read, Write, Seek, SeekFrom};
+use std::io::{self, Read, Seek, SeekFrom, Write};
 
 use token::UserCredential;
 

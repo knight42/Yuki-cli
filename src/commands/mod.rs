@@ -9,6 +9,13 @@ macro_rules! exit_on_error {
     })
 }
 
+macro_rules! pprint_json {
+    ($v:ident) => ({
+        $crate::serde_json::to_writer_pretty(::std::io::stdout(), &$v)?;
+        println!();
+    })
+}
+
 pub(crate) fn pretty_size<S>(size: &i64, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,

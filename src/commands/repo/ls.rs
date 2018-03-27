@@ -1,8 +1,7 @@
 use clap::{App, Arg, ArgMatches, SubCommand};
 use commands::Commander;
 use context::Context;
-use serde_json::{self, Value};
-use std::io;
+use serde_json::Value;
 
 pub(crate) struct RepoLs;
 
@@ -21,8 +20,7 @@ impl Commander for RepoLs {
             let mut r = ctx.get(remote).send()?;
             exit_on_error!(r);
             let repos: Value = r.json()?;
-            serde_json::to_writer_pretty(io::stdout(), &repos)?;
-            println!();
+            pprint_json!(repos);
             return Ok(());
         }
 
@@ -31,8 +29,7 @@ impl Commander for RepoLs {
         let mut r = ctx.get(remote).send()?;
         exit_on_error!(r);
         let repo: Value = r.json()?;
-        serde_json::to_writer_pretty(io::stdout(), &repo)?;
-        println!();
+        pprint_json!(repo);
         Ok(())
     }
 }

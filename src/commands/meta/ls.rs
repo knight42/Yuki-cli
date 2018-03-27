@@ -2,8 +2,6 @@ use chrono::{DateTime, Local, TimeZone};
 use clap::{App, Arg, ArgMatches, SubCommand};
 use commands::{pretty_size, ts_local, Commander};
 use context::Context;
-use serde_json;
-use std::io;
 
 pub(crate) struct MetaLs;
 
@@ -44,7 +42,7 @@ impl Commander for MetaLs {
             let mut r = ctx.get(remote).send()?;
             exit_on_error!(r);
             let repos: Vec<Meta> = r.json()?;
-            serde_json::to_writer_pretty(io::stdout(), &repos)?;
+            pprint_json!(repos);
             return Ok(());
         }
 
@@ -53,8 +51,7 @@ impl Commander for MetaLs {
         let mut r = ctx.get(remote).send()?;
         exit_on_error!(r);
         let repo: Meta = r.json()?;
-        serde_json::to_writer_pretty(io::stdout(), &repo)?;
-        println!();
+        pprint_json!(repo);
         Ok(())
     }
 }

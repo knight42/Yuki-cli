@@ -2,7 +2,6 @@ use chrono::{DateTime, Local};
 use clap::{App, Arg, ArgMatches, SubCommand};
 use commands::{pretty_size, ts_local, Commander};
 use context::Context;
-use serde_json;
 use std::io;
 
 pub(crate) struct RepoLogs;
@@ -52,7 +51,7 @@ impl Commander for RepoLogs {
             let mut r = ctx.get(remote).query(&[("stats", "1")]).send()?;
             exit_on_error!(r);
             let stats: Vec<LogFileStat> = r.json()?;
-            serde_json::to_writer_pretty(io::stdout(), &stats)?;
+            pprint_json!(stats);
             return Ok(());
         }
         let mut req = ctx.get(remote);

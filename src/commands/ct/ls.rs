@@ -2,8 +2,6 @@ use chrono::{DateTime, Local};
 use clap::{App, ArgMatches, SubCommand};
 use commands::{ts_local, Commander};
 use context::Context;
-use serde_json;
-use std::io;
 
 pub(crate) struct CtLs;
 
@@ -28,8 +26,7 @@ impl Commander for CtLs {
         let mut r = ctx.get(remote).send()?;
         exit_on_error!(r);
         let cts: Vec<Container> = r.json()?;
-        serde_json::to_writer_pretty(io::stdout(), &cts)?;
-        println!();
+        pprint_json!(cts);
         Ok(())
     }
 }
