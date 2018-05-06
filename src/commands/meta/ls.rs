@@ -24,6 +24,7 @@ struct Meta {
     last_success: DateTime<Local>,
     #[serde(serialize_with = "pretty_size")] size: i64,
     name: String,
+    syncing: bool,
     upstream: String,
 }
 
