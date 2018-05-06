@@ -2,7 +2,7 @@
 authors = ["knight42 <anonymousknight96@gmail.com>"]
 name = "yuki_cli"
 repository = "https://github.com/knight42/Yuki-cli"
-version = "0.1.0"
+version = "0.1.3"
 
 [badges.travis-ci]
 branch = "master"
