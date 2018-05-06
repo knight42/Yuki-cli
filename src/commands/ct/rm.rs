@@ -6,7 +6,7 @@ pub(crate) struct CtRm;
 
 impl Commander for CtRm {
     fn build() -> App<'static, 'static> {
-        SubCommand::with_name("ls")
+        SubCommand::with_name("rm")
             .about("Remove the given container")
             .arg(Arg::with_name("NAME"))
     }
