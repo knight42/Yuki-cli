@@ -1,4 +1,9 @@
 use serde::Serializer;
+use chrono::{DateTime, Local, TimeZone};
+
+pub(crate) fn default_date() -> DateTime<Local> {
+    return Local.timestamp(0, 0);
+}
 
 macro_rules! exit_on_error {
     ($r:ident) => ({

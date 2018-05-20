@@ -1,13 +1,9 @@
-use chrono::{DateTime, Local, TimeZone};
+use chrono::{DateTime, Local};
 use clap::{App, Arg, ArgMatches, SubCommand};
-use commands::{pretty_size, ts_local, Commander};
+use commands::{pretty_size, ts_local, default_date, Commander};
 use context::Context;
 
 pub(crate) struct MetaLs;
-
-fn default_date() -> DateTime<Local> {
-    return Local.timestamp(0, 0);
-}
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
