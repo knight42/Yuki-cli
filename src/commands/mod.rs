@@ -2,7 +2,7 @@ use serde::Serializer;
 use chrono::{DateTime, Local, TimeZone};
 
 pub(crate) fn default_date() -> DateTime<Local> {
-    return Local.timestamp(0, 0);
+    Local.timestamp(0, 0)
 }
 
 macro_rules! exit_on_error {
@@ -26,7 +26,7 @@ where
     S: Serializer,
 {
     let mut size = *size as f64;
-    for unit in ["B", "KiB", "MiB", "GiB"].iter() {
+    for unit in &["B", "KiB", "MiB", "GiB"] {
         if size < 1024_f64 {
             return serializer.serialize_str(&format!("{:.1} {}", size, unit));
         } else {
@@ -40,7 +40,7 @@ pub(crate) mod ts_local {
     use chrono::{DateTime, Local};
     use chrono::serde::ts_seconds::deserialize as from_ts;
     use serde::{Deserializer, Serializer};
-    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+    const FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
     pub fn serialize<S>(date: &DateTime<Local>, serializer: S) -> Result<S::Ok, S::Error>
     where

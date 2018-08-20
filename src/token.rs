@@ -14,8 +14,7 @@ pub(crate) fn find_by_host<R: Read>(mut r: R, host: &str) -> ::Result<String> {
     r.read_to_end(&mut buffer)?;
     let ts: Vec<UserCredential> = serde_json::from_slice(buffer.as_slice())?;
     ts.into_iter()
-        .filter(|x| x.host == host)
-        .next()
+        .find(|x| x.host == host)
         .map(|x| String::from(x.token))
-        .ok_or(err_msg("no such host"))
+        .ok_or_else(|| err_msg("no such host"))
 }

@@ -1,4 +1,5 @@
 extern crate chrono;
+extern crate dirs;
 #[macro_use]
 extern crate clap;
 #[macro_use]
@@ -20,7 +21,6 @@ mod token;
 use clap::{App, AppSettings, Arg};
 use commands::Commander;
 use reqwest::header::{self, Headers};
-use std::env;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
 
@@ -37,7 +37,7 @@ macro_rules! exit {
 
 fn main() {
     let matches = build_cli().get_matches();
-    let homedir = match env::home_dir() {
+    let homedir = match dirs::home_dir() {
         Some(mut d) => {
             d.push(".yuki");
             d

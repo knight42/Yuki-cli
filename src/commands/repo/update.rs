@@ -20,7 +20,7 @@ impl Commander for RepoUpdate {
                     .multiple(true)
                     .empty_values(false)
                     .validator(|v: String| -> Result<(), String> {
-                        if v.contains("=") {
+                        if v.contains('=') {
                             return Ok(());
                         }
                         Err("`=` is not included in the key-value".into())
@@ -37,7 +37,7 @@ impl Commander for RepoUpdate {
         let mut set = serde_json::Map::new();
         let mut unset = serde_json::Map::new();
         for kv in kvs {
-            let l: Vec<_> = kv.splitn(2, "=").collect();
+            let l: Vec<_> = kv.splitn(2, '=').collect();
             if l[1].is_empty() {
                 unset.insert(l[0].into(), json!(l[1]));
             } else {

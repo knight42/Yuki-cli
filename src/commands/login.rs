@@ -50,7 +50,7 @@ impl super::Commander for Login {
         };
         let host = args.value_of("remote").unwrap();
         let mut changed = false;
-        for u in us.iter_mut() {
+        for u in &mut us {
             if u.host == host {
                 changed = true;
                 (*u).token = &t.token;
