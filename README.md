@@ -7,7 +7,7 @@
 
 ### Introduction
 
-[Yuki(ustcsync)](https://github.com/knight42/Yuki) 的命令行客户端.
+[Yuki(ustcsync)](https://github.com/ustclug/Yuki) 的命令行客户端.
 
 ### Tips
 
