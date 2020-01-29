@@ -1,5 +1,7 @@
 # Yuki CLI
 
+⚠️ 注意：项目已经移到[这里](https://github.com/ustclug/Yuki/blob/master/cmd/yukictl/README.md)，该仓库已废弃。
+
 ### Table of Content
 
 * [Introduction](#introduction)
